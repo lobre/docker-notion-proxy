@@ -3,7 +3,12 @@ server {
     server_name {{ getenv "HOST" "example.com" }};
 
     location / {
+        {{ if getenv "REDIRECT" }}
+        rewrite ^/$ {{ getenv "PROTO" "http" }}://{{ getenv "HOST" "example.com" }}/{{ getenv "REDIRECT" }};
+        {{ end }}
+
         proxy_pass https://www.notion.so;
+
         proxy_set_header Host www.notion.so;
         proxy_set_header Referer https://www.notion.so;
 
@@ -13,8 +18,8 @@ server {
         proxy_set_header Accept-Language $http_accept_language;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
-        sub_filter https://www.notion.so {{ getenv "PROTO" "http" }}{{ getenv "HOST" "example.com" }};
+        sub_filter https://www.notion.so {{ getenv "PROTO" "http" }}://{{ getenv "HOST" "example.com" }};
         sub_filter_once off;
-        sub_filter_types *;
+        sub_filter_types application/javascript;
     }
 }
