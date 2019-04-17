@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  app:
+    image: lobre/domain-proxy
+    container_name: domain-proxy
+    ports:
+      - 8080:80
+    environment:
+      - HOST=example.com
+      - PROXY_HOST=www.notion.so
+      - PROXY_FILTER_HOST=notion.so
+      - PROXY_URL=https://www.notion.so/What-s-New-157765353f2c4705bd45474e5ba8b46c
