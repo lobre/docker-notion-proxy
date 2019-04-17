@@ -1,11 +1,11 @@
 server {
     listen 80;
-    server_name $HOST;
+    server_name {{ getenv "HOST" "example.com" }};
 
     location / {
-        proxy_pass $PROXY_URL;
-        proxy_set_header Host $PROXY_HOST;
-        proxy_set_header Referer $PROXY_URL;
+        proxy_pass https://www.notion.so;
+        proxy_set_header Host www.notion.so;
+        proxy_set_header Referer https://www.notion.so;
 
         proxy_set_header User-Agent $http_user_agent;
         proxy_set_header X-Real-IP $remote_addr;
@@ -13,7 +13,8 @@ server {
         proxy_set_header Accept-Language $http_accept_language;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 
-        sub_filter $PROXY_FILTER_HOST $HOST;
+        sub_filter https://www.notion.so {{ getenv "PROTO" "http" }}{{ getenv "HOST" "example.com" }};
         sub_filter_once off;
+        sub_filter_types *;
     }
 }
