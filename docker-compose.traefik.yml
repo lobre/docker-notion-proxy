@@ -1,0 +1,28 @@
+# This will work with an external traefik container
+# The core_proxy network has to be defined externally
+# The variables "url" and "redirect" can be defined in a ".env" file
+version: '3'
+
+networks:
+  default: {}
+  core_proxy:
+    external: true
+
+services:
+  app:
+    image: lobre/notion-proxy
+    container_name: notion-proxy
+    restart: always
+    environment:
+      - HOST=${url}
+      - PROTO=https
+      - REDIRECT=${redirect}
+    networks:
+      - default
+      - core_proxy
+    labels:
+      - traefik.enable=true
+      - traefik.port=80
+      - traefik.frontend.rule=Host:${url}
+      - traefik.frontend.redirect.entryPoint=https
+      - traefik.docker.network=core_proxy
