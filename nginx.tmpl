@@ -21,5 +21,7 @@ server {
         sub_filter https://www.notion.so {{ getenv "PROTO" "http" }}://{{ getenv "HOST" "example.com" }};
         sub_filter_once off;
         sub_filter_types application/javascript;
+
+        proxy_ssl_server_name on;
     }
 }
