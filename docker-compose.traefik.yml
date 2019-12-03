@@ -14,7 +14,7 @@ services:
     container_name: notion-proxy
     restart: always
     environment:
-      - HOST=${url}
+      - HOST=www.${url}
       - PROTO=https
       - REDIRECT=${redirect}
     networks:
@@ -23,6 +23,8 @@ services:
     labels:
       - traefik.enable=true
       - traefik.port=80
-      - traefik.frontend.rule=Host:${url}
+      - traefik.frontend.rule=Host:${url},www.${url}
+      - traefik.frontend.redirect.regex=^https://${url}/(.*)
+      - traefik.frontend.redirect.replacement=https://www.${url}/$$1
       - traefik.frontend.redirect.entryPoint=https
       - traefik.docker.network=core_proxy
